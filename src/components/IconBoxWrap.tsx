@@ -1,36 +1,101 @@
-import IconBox from "./IconBox";
-
-
+import Image from "next/image";
+import { useQuery, gql } from "@apollo/client";
 
 export default function IconBoxWrap() {
 
-    const iconBoxCon = [
-        {
-            iconPath :"/img/icon1.png",
-            title :"건물관리 업계 1위의 빌딩<br/> 자산관리 노하우 보유",
-            description :"축적된 경험을 바탕으로 문제점을 파악해 빌딩의 자산 가치 극대화를 위한 맞춤 솔루션을 제시합니다.",
-        },
-        {
-            iconPath :"/img/icon2.png",
-            title :"맞춤형<br/>자산관리",
-            description :"대형빌딩 관리 기법을 중소형빌딩에 접목해 최적화된 솔루션을 제공합니다.",
-        },
-        {
-            iconPath :"/img/icon3.png",
-            title :"건물관리 분야 전문가<br/>자격증 최다 보유",
-            description :"유지관리부터 미래가치 상승까지 내 건물에 딱 맞는 통합자산관리서비스를 제공합니다.",
-        },
-        {
-            iconPath :"/img/icon4.png",
-            title :"약 13,000여개<br/>건물관리 노하우 보유",
-            description :"신축, 증축, 리모델링 등 빌딩 가치 증대를 위한 솔루션 제안과  공정관리를 통해 건물 가치 상승이 가능합니다",
+  interface IconboxwrapImage {
+    altText: string;
+    filePath: string;
+    fileSize: number;
+  }
+  interface iconBoxConImageNode {
+    node: IconboxwrapImage;
+  }
+  interface Iconboxwrap {
+    id: string;
+    title: string;
+    iconboxTxt: string;
+    iconboxImage: iconBoxConImageNode
+  }
+  interface IconBoxConNode {
+    node: Iconboxwrap;
+  }
+  
+  interface IconBoxWrapsData {
+    iconboxwraps: {
+      edges: IconBoxConNode[]
+    }
+  }
+  
+  const GET_ICONBOXCON = gql`
+    query Iconboxwrap {
+      iconboxwraps {
+        edges {
+          node {
+            id
+            title
+            iconboxTxt
+            iconboxImage {
+              node {
+                altText
+                filePath
+                fileSize
+              }
+            }
+          }
         }
-    ]
+      }
+    }
+  `;
+
+  const { data, loading, error } = useQuery<IconBoxWrapsData>(GET_ICONBOXCON);
+
+  if (loading) {
+    return <h2>로딩중</h2>;
+  }
+
+  if (error) {
+    return <h1>에러 발생</h1>;
+  }
+    // edges 배열을 꺼내고, node를 매핑해서 실제 iconboxwraps 리스트를 만든다
+  const iconboxwraps = data?.iconboxwraps.edges.map((edge) => edge.node).slice(0, 4);
+
+  const iconBoxConImageUrl = (src: string) => {
+    const wordpressDomain = "https://admin.ejincare.com"; // 실제 WordPress 사이트 도메인
+    const imageUrl = src.startsWith('http')
+    ? src
+    : `${wordpressDomain}${src}`;
+    return imageUrl;
+  }
+
     return (
-        <section className="max-w-screen-xl mx-auto grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 min-h-48 text-gray-800 text-2xl font-bold">
-            {iconBoxCon.map((iconBoxCon, index) => (
-                <IconBox key={index} iconPath={iconBoxCon.iconPath} title={iconBoxCon.title} description={iconBoxCon.description} />
-            ))}
+        <section className="max-w-screen-xl mx-auto min-h-48 text-gray-800 sm:mt-[200px] mt-[0px] text-2xl font-bold">
+            <div className="flex-1 flex flex-col gap-6">
+                <ul className="grid grid-cols-2 gap-x-[40px] gap-y-[30px] sm:gap-y-[220px] md:grid-cols-3 lg:grid-cols-4">
+                    {iconboxwraps?.map((iconboxwrap: Iconboxwrap, idx: number) => (
+                        
+                      <li className={`${
+                        idx%2 == 0 ? 'sm:translate-y-[-120px]' : 'translate-y-[0px]'
+                      }`}>
+
+                        {
+                          iconboxwrap?.iconboxImage?.node?.filePath ? (
+                            <Image
+                              width={290}
+                              height={387}
+                              className="flex-none w-full"
+                              src={iconBoxConImageUrl(iconboxwrap.iconboxImage.node.filePath)}
+                              unoptimized alt={""}                            />
+                          ) : (
+                            <></>
+                          )
+                        }
+                          <div className="text-[15px] sm:text-[19px] block leading-[1.3] mt-3">{iconboxwrap.title}</div>
+                          <div className="text-[13px] font-light leading-[1.6667em] mt-3">{iconboxwrap.iconboxTxt}</div>
+                      </li>
+                    ))}
+                </ul>
+            </div>
         </section>
     )
 }

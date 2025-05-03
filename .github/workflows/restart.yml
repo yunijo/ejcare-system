@@ -1,0 +1,23 @@
+name: Restart Services
+
+on:
+  workflow_dispatch:  # 수동 실행용
+
+jobs:
+  restart:
+    runs-on: ubuntu-latest
+    environment: nextjs-cafe24
+
+    steps:
+      - name: Restart Server Services via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "🔁 서비스 재시작 중..."
+            sudo systemctl restart mysql
+            sudo systemctl restart php8.1-fpm
+            pm2 restart all
+            echo "✅ 완료되었습니다!"

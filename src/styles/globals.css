@@ -102,16 +102,22 @@ body {
 }
 
 .swiper-slide img {
-  @apply w-full h-full object-cover max-h-96; /* max-h-96 is equivalent to max-height: 24rem (384px) */
+  @apply w-full h-full object-cover; /* max-h-96 is equivalent to max-height: 24rem (384px) */
 }
 
 @keyframes zoomIn {
 0% {
   transform: scale(1);
+  /* transform-origin: right; */
 }
 100% {
   transform: scale(1.1);
+  /* transform-origin: right; */
 }
+}
+
+.swiper-slide-active .animate-zoom {
+  animation: zoomIn 3s linear forwards ;
 }
 
 @-webkit-keyframes zoom-a {
@@ -208,7 +214,7 @@ body {
       transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
         stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .company .line{
+    .subMenu .line{
       stroke:#131f35
     }
     .line1 {
@@ -242,12 +248,14 @@ body {
     #header nav{height: 100%;}
 #header nav .depth1 {display: flex; align-items: center; justify-content: center; position: relative; z-index: 10; height: 100%; }
 #header nav .depth1 li { position: relative; }
+/*
 #header nav .depth1 > li{height: 100%;}
+
 #header nav .depth1 > li > a { display: flex; align-items: center; justify-content: center; position: relative; height: 100%; padding: 0 2.5em; color: #fff; font-size: 18px; transition: padding 0.5s, color 0.25s; }
-#header nav .depth1 > li > a.on{color: var(--org);}
+#header nav .depth1 > li > a.on{color: var(--org);}*/
 #header nav .depth1 > li.active > a { color: var(--org); font-weight: 600; }
 
-#header.company nav .depth1 > li > a {color: #131f35;}
+#header.subMenu nav .depth1 > li > a {color: #131f35;}
 
         
  
@@ -337,20 +345,6 @@ body {
     .sitemap .cont .top .close_btn:hover svg{transform: rotate(270deg); transition: transform 0.5s;}*/
   }
 
-  @media screen and (max-width: 1921px){
-      #header .right_btn .ham_btn {
-        /* width: 34px;
-        height: 34px; */
-      }
-      #header .right_btn .ham_btn svg {
-          /* font-size: 24px; */
-      }
-      /* #header .h_in{padding: 0 48px;} */
-      #header nav .depth1 > li > a {
-        padding: 0 2em;
-        font-size: 16px;
-      }
-  }
 
   @media screen and (max-width: 1441px) {
     /* .textOverlay .sub_tit {

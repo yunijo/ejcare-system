@@ -7,7 +7,7 @@ const SiteMap = () => {
       {
         id: '1',
         title: '회사소개',
-        href: './company'
+        href: './customerService'
       },
       {
         id: '2',
@@ -26,8 +26,8 @@ const SiteMap = () => {
       },
       {
         id: '5',
-        title: '고객센터',
-        href: './customerService'
+        title: 'Contact us',
+        href: './company'
       },            
     ] 
 
